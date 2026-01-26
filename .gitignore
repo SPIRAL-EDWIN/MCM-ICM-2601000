@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.ipynb_checkpoints/
+.env
+venv/
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.bbl
+*.blg
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project Specific
+/data/temp/
