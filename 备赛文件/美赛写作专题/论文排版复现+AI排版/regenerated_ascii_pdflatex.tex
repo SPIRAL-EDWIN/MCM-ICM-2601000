@@ -1,0 +1,1079 @@
+\documentclass{mcmthesis}
+\mcmsetup{CTeX = false,   % 使用 CTeX 套装时，设置为 true
+        tcn = 1111111, problem = ABCDEF,
+        sheet = true, titleinsheet = true, keywordsinsheet = true,
+        titlepage = false, abstract = true}
+\usepackage{palatino}
+\usepackage{lipsum}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{subfig}
+\usepackage{mdframed}
+\usepackage{threeparttable}
+\usepackage{indentfirst}
+\usepackage{siunitx}
+\usepackage{pifont}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
+\usepackage[most]{tcolorbox}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{xurl}
+\sisetup{
+  table-number-alignment = center,
+  round-mode = places,
+  round-precision = 2
+}
+
+\setlength{\parindent}{2em}
+\makeatletter
+\renewcommand\@cite[1]{\textsuperscript{[#1]}}
+\makeatother
+
+\title{Cracking the Cyber - Puzzle: KDMF in Action}
+% 这一段是备忘录部分，如果题目没有让写备忘录 或者书信 可以不要
+% \author{\small \href{http://www.latexstudio.net/}
+%   {\includegraphics[width=7cm]{mcmthesis-logo}}}
+% \date{\today}
+
+%  \memoto{\LaTeX{}studio}
+% \memofrom{Liam Huang}
+% \memosubject{Happy \TeX{}ing!}
+% \memodate{\today}
+% %\memologo{\LARGE I'm pretending to be a LOGO!}
+
+\begin{document}  
+\begin{abstract}
+  
+In the digital era, cybercrime has become a significant global concern due to the increasing 
+interconnectedness facilitated by modern technology. This study aims to identify patterns for data 
+- driven development and refinement of national cybersecurity policies. Specifically, we developed
+the \textbf{KDMF} model, consisting of three sub - models, to achieve this goal.
+
+To analyze \textbf{the global distribution of cybercrime}, we selected indicators like the National 
+Cyber Security Index (NCSI), Cybersecurity Exposure Index (CEI), Legal Measures Index, and 
+Cybercrime Reporting Rate. Through descriptive analysis and \textbf{K-means clustering}, we found 
+that countries with high NCSI scores and strong legal measures, such as those in the Purple Cluster, 
+are better at preventing and prosecuting cybercrimes. In contrast, countries in the Yellow Cluster 
+with low scores are high - risk targets. 
+
+To assess \textbf{the effectiveness of national cybersecurity policies}, we employed Latent Di-
+richlet Allocation (\textbf{LDA}) and the Difference - in - Differences (\textbf{DID}) model. LDA categorized 
+policies into six themes, and DID analysis showed that Data Protection and Privacy Regulations, 
+Cybersecurity Obligations of Network Operators, and Cross - Border Data Flow Rules are effec-
+tive in reducing cybercrime rates, while Cybercrime Criminal Legislation, Critical Information 
+Infrastructure Protection, and Cybersecurity Incident Emergency Response Mechanisms need im-
+provement. 
+
+To identify \textbf{the correlation between demographic factors and cybercrime distribution}, 
+we used the Maximal Information Coefficient (\textbf{MIC}) method and \textbf{factor analysis}. The results 
+indicated that the Internet Penetration Rate, Active mobile - broadband subscriptions, and GDP 
+per capita growth have relatively strong correlations with cybercrime, while GDP and tertiary ed-
+ucation enrollment have weaker effects. Different variables also have varying impacts across coun-
+tries, which is similar to the pattern found when analyzing the distribution. 
+Finally, we arranged our research findings into a 1 - page memo for country leaders attending 
+the ITU Summit on Cybersecurity, trying to offer key findings relevant for policymakers to better 
+address cybercrime challenges. 
+
+Sensitivity analysis on the DID and MIC models indicates the models' stability and reliability. 
+Overall, this research provides valuable insights for policymakers, helping them understand cy-
+bercrime patterns, evaluate policy effectiveness, and consider demographic factors when formu-
+lating more targeted and effective cybersecurity policies. 
+
+\begin{keywords}
+Cybercrime, KDMF, K-means, DID, MIC, Policy
+\end{keywords}
+\end{abstract}
+
+\maketitle
+\tableofcontents
+  \thispagestyle{empty}
+  \newpage
+
+\section{Introduction}
+\subsection{Problem Background}
+In the digital age, rapid technological progress has connected the world closely. However,
+this has led to a sharp increase in cybercrime. Reports show that the annual global cost of cyber-
+crime is expected to reach a staggering \$10.5 trillion by 2025\cite{1}. High - profile cases, like the 2024
+cyber - attacks on cryptocurrency exchanges causing hundreds of millions of dollars in losses,
+clearly demonstrate the severe financial impact.
+Cybercrime's transnational nature complicates matters. A single case can involve multiple
+countries, making it difficult to enforce laws due to jurisdictional issues. Moreover, many organi-
+zations hide cyber - attacks. A study found that over 60\% of small - and medium - sized enterprises
+in a certain region didn't report security breaches, hiding the true scale of cyber threats.
+Against this backdrop, the development and refinement of national cybersecurity policies
+grounded in data - driven insights are of paramount importance. Comprehending the patterns of
+cybercrime distribution, evaluating the efficacy of existing policies, and discerning the correlations
+with national demographics can offer invaluable guidance. Such knowledge equips countries to
+formulate more robust policies, foster closer international cooperation, and safeguard their digital
+assets and national security more effectively.
+\begin{figure}[h]
+  \small
+  \centering
+  \includegraphics[width=8cm]{figure0.png}
+  \caption{Top 10 threats in the Emerging Cybersecurity Threats 2030 published by the EU} \label{fig:aa}
+\end{figure}
+
+
+\subsection{Restatement of the Problem}
+The swift dissemination of modern technology has augmented global connectivity but has
+also precipitated a dramatic upsurge in cybercrime. This phenomenon has imposed formidable
+challenges on countries in their endeavors to safeguard their digital ecosystems. To extract patterns
+from effective national cybersecurity policies and laws and to propel the data - driven evolution
+and improvement of these policies, the following undertakings are imperative.
+
+\begin{itemize}[\ding{226}]
+  \item \textbf{Task 1:} Analyze the global distribution of cybercrime. Identify high - target countries,successful and foiled crime regions, and areas of reporting and prosecution. Explore underlying patterns.
+  \item \textbf{Task 2:} Examine national cybersecurity policies. Compare with cybercrime distribution to find effective or ineffective policy components. Consider policy adoption time.
+  \item \textbf{Task 3:} Investigate the correlation between demographic factors like internet access, wealth, and education levels and cybercrime distribution. Analyze their impact on the theory of effective policies.
+  \item \textbf{Task 4:} Based on data quantity, quality, and reliability, identify limitations for policy-makers when using research findings for policy development.
+  \item \textbf{Task 5:} Write a one - page memo for country leaders at the ITU Cybersecurity Summit.Provide a non-technical overview of work objectives, context, theory, and key findings.
+\end{itemize}
+
+\subsection{Our Work}
+Our work mainly includes developing the \textbf{KDMF} model to drive data - informed national
+cybersecurity policies.
+For \textbf{Task 1}, we collected cybercrime data, visualized it, and used \textbf{K-Means clustering} to
+understand global cybercrime distribution.
+For \textbf{Task 2}, we gathered and analyzed national cybersecurity policies. We categorized poli-
+cies into six themes via \textbf{LDA}, and evaluated their effectiveness with \textbf{DID} model.
+For \textbf{Task 3}, we used the \textbf{MIC} and \textbf{factor analysis} to explore the correlation between de-
+mographics and cybercrime.
+These efforts provided insights into how demographic factors influence cybercrime, guiding
+more targeted cybersecurity strategies.
+\begin{figure}[h]
+  \small
+  \centering
+  \includegraphics[width=9cm]{figure1.png}
+\end{figure}
+\section{Assumptions and Justifications}  
+\begin{itemize}[\ding{226}]
+\item \textbf{Assumption 1:} Data Completeness and Representativeness. The 9,867 cyber - crime
+cases sourced from the VCDB platform are assumed to be sufficiently comprehensive
+for representing global cyber - crime distribution.\cite{2} Similarly, the cyber - security - re-
+lated indicators used in our analysis are assumed to be authoritative.
+
+\textbf{Justification:} VERIS -- it is rooted in the examination of evidence and post-incident
+analysis, and given that these databases are exclusively from websites of global organi-
+zations, it's logical to deduce that the quality of their data is superior.
+
+\item \textbf{Assumption 2:} Stable Socio - Economic and Policy Context. We assume that the national
+economic conditions and policy environments remain relatively stable during the study
+period. Drastic economic events like recessions or financial crises, as well as sudden,
+unforeseen policy overhauls (beyond those being studied), are not expected.
+
+\textbf{Justification:} Economic instability can significantly impact cyber - crime rates. Unstable
+policies would make it challenging to establish a clear link between policy implementa-
+tion and cyber - crime distribution. A stable context allows us to isolate the effects of the
+policies and other variables we are analyzing.
+
+\item \textbf{Assumption 3:} Causal Independence of Variables. National demographics such as inter-
+net access, wealth, and education levels are assumed to be causally independent of policy
+implementation, except for the relationships we are explicitly exploring.
+
+\textbf{Justification:} If demographics and policy implementation are causally intertwined in
+unaccounted ways, it would be challenging to disentangle the individual effects of each
+on cyber - crime distribution. By assuming causal independence, we can more easily
+analyze the correlations and test our theories.
+
+\end{itemize}
+\section{Notations}
+The key mathematical notations used in this paper (mostly in the DID Method) are listed in Table 1. The data of different dimensions are normalized in the concrete operation process
+ \begin{table}[H]
+  \caption{Notations used in this paper}
+    \centering
+    \begin{tabular}{cc}
+        \toprule
+        Symbol & Description \\
+        \midrule
+        $Y_{it}$ & The number of cybercrimes in country $i$ during year $t$ \\
+        $\alpha$ & Intercept; baseline cyber - crime level when all independent variables are zero  \\
+        $\beta_{1}$ & Difference in cyber - crime rates pre - policy implementation \\
+        $\beta_{2}$ & General time - trend change in cyber - crime rates across all countries \\
+        $\beta_{3}$ & DID estimator; net policy implementation effect on cyber - crime rates \\
+        $X_{kit}$ & k-th normalized control variable for country $i$ in year $t$ \\
+        $\gamma_k$ & Coefficient of $X_{kit}$  \\
+        $\epsilon_{it}$ & Error term \\ 
+        \bottomrule
+    \end{tabular}
+  \end{table}
+
+
+\section{K-Means approach: Unveiling the Tapestry of Cybercrime}
+\subsection{Introduction}
+With development of technology, cybercrime has transcended borders, emerging as a perva-
+sive threat that affects nations worldwide. Understanding its global distribution is essential for
+developing effective strategies to combat this menace. This part conducts a comprehensive analy-
+sis using key indicators and a clustering approach to reveal patterns in cybercrime distribution.
+
+\subsection{Indicators Selection}
+To conduct an in-depth examination of the global distribution of cybercrime, we selected four
+key indicators that collectively illuminate various dimensions of cybercrime dynamics and national
+responses:
+
+\begin{itemize}[\ding{226}]
+  \item  \textbf{National Cyber Security Index (NCSI):} This index measures a country's readiness and
+capability to prevent cyber threats and manage cyber incidents.\cite{3} It reflects the robust-
+ness of a nation's cybersecurity infrastructure, policies, and strategic capacities. High
+NCSI scores indicate effective cybersecurity measures, reducing vulnerability to cyberat-
+tacks. Conversely, low scores suggest inadequate defenses.
+  \item \textbf{Cybersecurity Exposure Index (CEI):} The CEI evaluates the level of exposure a coun-
+try has to cyber risks by considering both the frequency of cyberattacks and the country's
+cybersecurity commitment.\cite{4} A high CEI score indicates significant exposure, poten-
+tially due to frequent attacks and insufficient cybersecurity measures.
+  \item \textbf{Legal Measures (Global Cybersecurity Index):} This indicator assesses the compre-
+hensiveness and effectiveness of a country's laws, regulations, and enforcement mecha-
+nisms related to cybercrime.\cite{5} Strong legal measures can deter potential cybercriminals
+through the threat of legal repercussions and provide the means to prosecute and penalize
+offenders.
+  \item \textbf{Cybercrime Reporting Rate:} This metric reflects the frequency with which cybercrime
+incidents are reported in a country relative to its number of internet users. High reporting
+rates suggest public awareness of cyber threats, efficient reporting mechanisms, and trust
+in law enforcement.     
+\end{itemize}
+
+By examining cybersecurity preparedness, exposure to threats, legal infrastructures, and re-
+porting behaviors, we gain comprehensive insights into both the vulnerabilities that enable cyber-
+crime and the capacities that enable nations to respond effectively.  
+\subsection{Data Analysis}
+\subsubsection{Descriptive Analysis of Individual Indicators}
+\begin{enumerate}
+  \item National Cyber Security Index (NCSI)
+The NCSI is a critical measure of a nation's ability to protect itself against cyber threats,
+evaluating factors such as cybersecurity policies, education, incident response capabilities, and
+protection of critical infrastructure.
+
+  \begin{itemize}[\ding{226}]
+    \item \textbf{High-Scoring Countries:} Nations such as Belgium (94.81), Lithuania (93.51), and Germany
+(90.91) exhibit excellent preparedness. Their high NCSI scores reflect comprehensive cyber-
+security strategies, well-established policies, continuous investment in cybersecurity infra-
+structure, and robust incident response mechanisms. These countries are better positioned to
+prevent cyberattacks and mitigate their impact, reducing the likelihood of successful cyber-
+crimes.
+
+  \item \textbf{Low-Scoring Countries:} In contrast, countries like Afghanistan (11.69), Saudi Arabia
+(10.39), and Myanmar (10.39) have significantly lower NCSI scores. This indicates insuffi-
+cient cybersecurity measures, outdated or absent cybersecurity policies, limited resources, and
+lack of awareness or training. Such vulnerabilities make them attractive targets for cybercrim-
+inals, who can exploit these weaknesses to carry out attacks with a higher chance of success.
+    \begin{figure}[H]
+      \centering
+      \includegraphics[width=12cm]{figure2.png}
+      \caption{Which countries are disproportionately high targets of cybercrimes?}
+    \end{figure}  
+  \end{itemize}
+
+ \item Cybersecurity Exposure Index (CEI)
+To provide a more intuitive representation of countries' cybersecurity levels, we processed
+the original Cybersecurity Exposure Index (CEI) values. Given that the original CEI ranges from
+0 to 1, with higher scores indicating higher exposure to cybercrime, we transformed the data by
+calculating $(1 - original CEI value) \times   100$. This new calculation results in a modified CEI
+where a higher score now corresponds to a lower exposure level. This transformation was carried
+out to simplify the interpretation of the index, making it easier to understand which countries have
+a lower vulnerability to cybercrime at a glance.
+
+  \begin{itemize}[\ding{226}]
+    \item \textbf{High-Security Countries:} Finland (89.0) and Belgium (81.0) have high CEI scores, which
+may face lower exposure levels. These countries have well - developed digital infrastructure
+and high internet penetration, which would seemingly make them vulnerable. However, their
+advanced security strategies, including strong legal frameworks, active incident response
+teams, and high - level security awareness, effectively reduce their exposure to cyber threats,
+resulting in low CEI scores.
+
+  \item \textbf{Low-Security Countries:} Afghanistan (0.0) and Myanmar (0.0) report low CEI scores, sug-
+gesting they face a substantial number of cyber threats. Their limited technological capabili-
+ties and underdeveloped digital infrastructure result in less effective security measures. This 
+makes them more vulnerable to cyber threats, thereby increasing their exposure. Moreover,
+weak legal frameworks related to cybercrime in these nations are ineffective at deterring malicious actors.
+\end{itemize}
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width=12cm]{figure3.png}
+      \caption{Where are cybercrimes successful, and where are they thwarted?}
+    \end{figure}  
+  
+\item Legal Measures (Global Cybersecurity Index)
+Legal frameworks are fundamental in combating cybercrime, establishing the legal basis for
+action against cybercriminals.
+\begin{itemize}[\ding{226}]
+
+  \item \textbf{Countries with Strong Legal Measures:} Nations such as Germany (20) and Australia (20)
+possess comprehensive cyber laws, regulations, and enforcement mechanisms. They have
+specific legislation addressing cybercrime, enforce legal actions against offenders, and partic-
+ipate in international cooperation. This legal rigor deters cybercriminals and enables effective
+prosecution when crimes occur.
+  \item \textbf{Countries with Weak Legal Measures:} Afghanistan (5.81) and Turkey (10.12) have lower
+scores, indicating insufficient legal frameworks to address cybercrime effectively. Weak or
+outdated laws, lack of enforcement, and judicial inefficiencies hinder their ability to prosecute
+cybercriminals, potentially making these countries safer havens for such activities.
+\end{itemize}
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width=12cm]{figure4.png}
+      \caption{Where are cybercrimes prosecuted?}
+    \end{figure}
+
+\item Cybercrime Reporting Rate
+Reporting plays a crucial role in understanding the scale of cybercrime and implementing
+appropriate responses.
+\begin{itemize}[\ding{226}]
+  \item \textbf{High Reporting Rates:} The United States (2.24e-05) and the United Kingdom (8.88e-06)
+exhibit relatively high reporting rates, reflecting efficient reporting systems, high public
+awareness, and trust in authorities. These countries encourage reporting through accessible
+channels, public education campaigns, and assurances of support and confidentiality. High
+reporting rates enable authorities to gather intelligence, track trends, and allocate resources
+effectively.
+
+  \item \textbf{Low Reporting Rates:} Countries like India, Ukraine, and Uganda display minimal or zero
+reporting rates. This may result from cultural stigmas, lack of awareness about cybercrime,
+mistrust of authorities, or insufficient reporting mechanisms. Low reporting hinders the ability
+of law enforcement and policymakers to grasp the true extent of cybercrime, allowing threats
+to persist unaddressed.
+\end{itemize}
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width=12cm]{figure5.png}
+      \caption{Where are cybercrimes reported?}
+    \end{figure}
+\end{enumerate}
+\subsubsection{Clustering Analysis of Cybercrime Distribution Patterns}
+\begin{enumerate}
+  \item Clustering Process Overview
+To uncover underlying patterns in the global distribution of cybercrime, we employed K-
+means clustering,\cite{6} focusing on the NCSI and Legal Measures indicators. This approach groups
+countries with similar characteristics, enabling the identification of clusters with shared vulnera-
+bilities or strengths.
+  \begin{itemize}[\ding{226}]
+  \item \textbf{Data Standardization:} Ensured comparability across different scales and units.
+  \item \textbf{Determination of Optimal Clusters:} Used the Elbow Method to identify the optimal number
+of clusters for the K-means algorithm. It involved calculating inertia (sum of squared distances
+to nearest centers) for different K values. The Elbow Method graph showed inertia decrease
+slowed around K = 3, the "elbow" point, meaning more clusters above K = 3 had diminishing
+quality returns. We also considered the Silhouette Score. Although K = 2 had the highest score
+for cohesion and separation, overall, K = 3 balanced inertia reduction and high Silhouette
+Score better, so it was chosen as optimal.     
+    \begin{figure}[H]
+      \centering  
+      \includegraphics[width=12cm]{figure6.png}
+      \caption{Elbow and Silhouette Plots for Cluster Number Selection}
+    \end{figure}
+ \item \textbf{K-Means Clustering:} Classified countries into three clusters---Purple, Yellow, and Cyan---
+based on similarities in cybersecurity preparedness and legal measures. The Purple Cluster
+includes countries that exhibit high standardized values for both NCSI and Legal Measures,
+signifying strong cybersecurity preparedness and well - established legal frameworks. In con-
+trast, the Yellow Cluster consists of countries with low standardized values for these indica-
+tors, indicating significant vulnerabilities in both cybersecurity and legal protection. The Cyan
+Cluster represents countries with a more heterogeneous set of characteristics, where there are
+a mix of strengths and weaknesses in either NCSI or Legal Measures.
+ \item \textbf{Visualization and Interpretation:} Mapped the clustering results to facilitate analysis. Using
+principal component analysis (PCA) to project high - dimensional data onto a 2D plane helped
+visualize clustering results. Each country was a point, and cluster centers were red "X" sym-
+bols. This showed country distribution in clusters and overlapping areas, highlighting the
+complexity of differentiating countries by just NCSI and Legal Measures. It also showed a
+country's cyber - security was affected by many factors, calling for a more comprehensive
+analysis with more cyber - crime related variables.
+\end{itemize}
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width=8cm]{figure7.png}
+      \caption{PCA - based 2D Visualization of Cyber - security Clustering Results}
+    \end{figure}
+  
+\item Analysis of Clustering Results
+  \begin{tcolorbox}[
+    colback=purple!10,      % 背景色（浅紫）
+    colframe=purple!30,     % 边框色
+    arc=6pt,                % 圆角
+    boxrule=0pt,            % 去掉边框线
+    left=8pt, right=8pt,    % 内边距
+    top=4pt, bottom=4pt,
+    drop shadow,            % 阴影
+  ]
+    Purple Cluster: Prepared and Resilient Nations
+  \end{tcolorbox}
+
+  \textbf{Characteristics:} High standardized values for both NCSI and Legal Measures.
+
+  \textbf{Examples:} Germany, Belgium, Australia, United Kingdom.
+
+  \textbf{Analysis:} Countries in the Purple Cluster exhibit strong cybersecurity infrastructures and compre-
+hensive legal frameworks. Their high NCSI scores reflect advanced technical capabilities, effective policies, and proactive strategies.
+Robust legal measures indicate stringent laws, effective enforcement, and active participation in international cooperation against cybercrime.
+
+  \textbf{Outcomes:} These nations are better at preventing cyberattacks and successfully thwarting cyber
+criminal activities. High reporting rates facilitate timely responses to threats. Strong legal systems
+enable effective prosecution of cybercriminals, deterring potential offenders.
+
+  \begin{tcolorbox}[
+    colback=Cyan!70,      
+    colframe=Cyan!100,     
+    arc=6pt,               
+    boxrule=0pt,           
+    left=8pt, right=8pt,   
+    top=4pt, bottom=4pt,
+    drop shadow,              
+  ]
+    Cyan Cluster: Mixed Preparedness and Resilience
+  \end{tcolorbox}
+
+
+  \textbf{Characteristics:} Moderate or mixed standardized values.
+
+  \textbf{Examples:} India, Ukraine, Finland.
+
+  \textbf{Analysis:} Countries in the Cyan Cluster display a mix of strengths and weaknesses. Some may
+  have strong cybersecurity measures but weaker legal frameworks, or vice versa. This inconsistency
+  may be due to transitional economies, evolving policies, or resource constraints.
+
+  \textbf{Outcomes:} These nations experience variable success in preventing and managing cybercrime.
+While some cyberattacks may be thwarted, others succeed due to gaps in defenses or enforcement.
+Reporting and prosecution rates may be inconsistent, reflecting the uneven development of sys-
+tems and awareness.
+
+  \begin{tcolorbox}[
+    colback=yellow!70,      
+    colframe=yellow!100,     
+    arc=6pt,               
+    boxrule=0pt,           
+    left=8pt, right=8pt,   
+    top=4pt, bottom=4pt,
+    drop shadow,              
+  ]
+    Yellow Cluster: High-Risk and Vulnerable Countries
+  \end{tcolorbox}
+  \textbf{Characteristics:} Low standardized values for both NCSI and Legal Measures.
+
+  \textbf{Examples:} Afghanistan, Myanmar, Saudi Arabia, Turkey.
+
+  \textbf{Analysis:} The Yellow Cluster comprises countries with significant vulnerabilities due to inade-
+quate cybersecurity preparedness and weak legal measures. These nations lack the infrastructure,
+policies, and capabilities necessary to defend against cyber threats effectively. Legal frameworks
+may be outdated, poorly enforced, or insufficient to address the complexities of cybercrime.
+
+  \textbf{Outcomes:} Such countries are disproportionately high targets for cybercriminals, who exploit
+these weaknesses. Cybercrimes are more likely to succeed and remain unreported or unprosecuted.
+The lack of deterrence emboldens cybercriminals, perpetuating a cycle of vulnerability.
+
+\item  Integration with Individual Indicator Analyses
+  
+The clustering results corroborate the findings from the individual indicator analyses:
+  \begin{itemize}[\ding{226}]
+    \item Correlation Between Preparedness and Vulnerability: Countries with high NCSI scores tend
+to have strong legal measures, suggesting a holistic approach to cybersecurity that includes
+both technological defenses and legal deterrents.
+    \item Impact on Cybercrime Outcomes: The clusters illustrate how variations in preparedness and
+legal frameworks influence the prevalence and success of cybercrime. The Purple Cluster's
+strengths result in lower rates of successful cyberattacks and higher rates of reporting and
+prosecution. Conversely, the Yellow Cluster's weaknesses lead to higher vulnerability and
+fewer resources to combat cyber threats effectively.
+    \item Regional Patterns: The clustering reveals geographical trends, with many developing nations
+falling into the Yellow Cluster, while more developed nations generally occupy the Purple
+Cluster. This highlights the role of economic development and resource allocation in cyber-
+security readiness.
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Discussion}
+\subsubsection{Synthesis of Findings}
+\begin{enumerate}
+  \item  Cybercrime Distribution and Targeting
+  \begin{itemize}[\ding{226}]
+    \item \textbf{High-Risk Targets:} Countries in the Yellow Cluster are disproportionately targeted by cy-
+bercriminals due to their low cybersecurity preparedness and weak legal measures. These vul-
+nerabilities result in higher success rates of attacks.
+    \item \textbf{Successful and Thwarted Cybercrimes:} In the Purple Cluster, robust cybersecurity infra-
+structures and stringent legal frameworks enable effective prevention and mitigation of cy-
+bercrimes. Cyberattacks are more likely to be detected, reported, and thwarted. Conversely,
+the Yellow Cluster experiences higher rates of successful cybercrimes due to their vulnera-
+bilities.
+  \end{itemize}
+  \item  Reporting and Prosecution of Cybercrimes
+  \begin{itemize}[\ding{226}]
+    \item \textbf{Reporting Rates:} High reporting rates in the Purple Cluster reflect public aware-
+ness, efficient reporting mechanisms, and trust in law enforcement. This transparency allows
+for better tracking of cyber threats and more effective responses. In the Yellow and Cyan
+Clusters, underreporting due to lack of awareness, inadequate infrastructure, or distrust ham-
+pers efforts to combat cybercrime.
+    \item \textbf{Prosecution Efficacy:} Strong legal frameworks in the Purple Cluster enable effective pros-
+ecution of cybercriminals, acting as a deterrent. Weak legal measures in the Yellow Cluster
+result in challenges in prosecuting offenders, allowing cybercrime to persist with minimal
+consequences.
+  \end{itemize}
+\end{enumerate}
+\subsubsection{Emergent Patterns and Implications}
+\begin{enumerate}
+  \item \textbf{Interplay Between Preparedness and Vulnerability:} There is a clear inverse relationship be-
+tween a country's cybersecurity preparedness and its vulnerability to cybercrime. Nations investing
+in cybersecurity measures and legal reforms are less susceptible to attacks and better at managing
+incidents.
+  \item \textbf{Significance of Legal Frameworks:} Effective legal measures are crucial for deterring cyber-
+criminals and prosecuting offenders. International cooperation and adherence to global cybersecu-
+rity norms enhance a country's ability to combat cybercrime.
+  \item \textbf{Role of Societal Factors:} Public awareness and education significantly impact reporting rates.
+Cultural attitudes towards technology and authority influence the willingness to report incidents.
+  \item \textbf{Economic and Developmental Factors:} Developing nations often lack resources to invest in
+cybersecurity infrastructure or legal reforms. Economic disparities contribute to the uneven distri-
+bution of cybercrime impacts globally.
+\end{enumerate}
+
+\section{DID Analysis: Assessing Cyber - security Policies}
+
+In our prior exploration of the global cybercrime distribution, we grasped the gravity and
+complexity of cyber threats. Now, we turn to assessing national cyber - security policies' effec-
+tiveness. Cybercrime's rapid growth in the digital age demands a close look at these policies.
+
+We use Latent Dirichlet Allocation (LDA) \cite{7} to categorize various national security policies,
+and Difference - in - Differences (DID) model \cite{8} to analyze their impact on cybercrime rates. By
+comparing policies with cybercrime distribution, we aim to find which policy elements are effec-
+tive or not in preventing, prosecuting, or mitigating cybercrimes, also considering policy adoption
+timings.
+\subsection{Cracking the Policy Code: LDA and DID in Action}
+\subsubsection{LDA - based Thematic Analysis}
+
+In the complex landscape of cybersecurity, national security policies vary widely in content
+and focus. To distill meaningful insights from these policies, we turned to Latent Dirichlet Allo-
+cation (LDA), a powerful topic - modeling technique in natural language processing.
+
+Our approach began with collecting and pre - processing a diverse set of national cybersecu-
+rity policies. This involved basic text cleaning, including the removal of stop - words that carry
+little semantic value. We then fed the pre - processed data into the LDA model. Through iterative
+experiments and evaluations using perplexity and coherence scores, we determined the optimal
+number of latent topics within the policies. This allowed us to categorize the policies into distinct
+themes, which served as the foundation for further analysis using the Difference - in - Differences
+(DID) model to assess the impact of each policy theme on cybercrime rates.
+The six topics we identified are as follows:
+
+\begin{itemize}[\ding{226}]
+ \item \textbf{Cybercrime Criminal Legislation:} This topic encompasses keywords like "Cyber-
+crime", "warrant", "Penalty", etc. It focuses on the legal frameworks and punitive
+measures in place to combat cybercrimes. Understanding these laws is crucial for as-
+sessing how countries prosecute cybercriminals.
+ \item \textbf{Data Protection and Privacy Regulations:} With keywords such as "Personal", "data", "En-
+cryption", this topic is centered around how countries safeguard personal data. In an era of
+rampant data - driven cybercrimes, these regulations play a vital role in preventing identity
+theft, data breaches, and other privacy - related cyber threats.
+ \item \textbf{Cybersecurity Obligations of Network Operators:} Keywords like "Cybersecurity", "oper-
+ator" define this topic. It delves into the responsibilities and requirements placed on network
+operators to ensure the security of their networks, which is a key aspect in preventing cyberat-
+tacks at the network level.
+ \item \textbf{Critical Information Infrastructure Protection:} Covering keywords "Infrastructure", "Pro-
+tection", "obligation", this topic is about safeguarding the critical information infrastructure
+of a country. These infrastructures are the backbone of a nation's digital ecosystem, and their
+protection is essential for national security.
+ \item \textbf{Cybersecurity Incident Emergency Response Mechanisms:} This topic, marked by key-
+words "security", "warning", "Compliance", deals with how countries respond to cyber - se-
+curity incidents. An effective response mechanism can mitigate the damage caused by cyber-
+crimes.
+ \item \textbf{Cross - Border Data Flow Rules:} Keywords "border", "exporter", "consent" define this topic.
+In a globalized digital world, cross - border data flow is common, and these rules govern how
+data is transferred across national boundaries, which is crucial for preventing cross - border
+cybercrimes.
+\end{itemize}
+\begin{figure}[H]
+      \centering
+      \includegraphics[width=14cm]{figure8.png}
+      \caption{Word Clouds Representing Six Cybersecurity Policy Themes}
+    \end{figure}
+
+\subsubsection{Efficiency Analysis by DID}
+
+After categorizing the policies using LDA, we employed the Difference - in - Differences
+(DID) approach to quantify the causal impact of each policy theme on cybercrime rates.
+\begin{enumerate}
+  \item \textbf{Data Preparation}\par
+
+\leavevmode\hspace*{1.5em} We meticulously selected countries for the experimental and control groups. For each policy
+theme, the experimental group consisted of 1 - 2 countries that had implemented the relevant pol-
+icies. In contrast, the control group was composed of an equal number of countries with similar
+internet penetration rates but without such policies. This careful selection was crucial for isolating
+the treatment effect of the policies, ensuring that any observed changes in cybercrime rates could
+be more accurately attributed to the policy implementation rather than other confounding factors
+related to internet usage.
+
+  \item \textbf{Variable Definition}\par
+
+ \leavevmode\hspace*{1.5em} In our DID model, the dependent variable Yit denotes the number of cybercrimes in country i
+during year t. The policy variable treatedit is a binary variable: a value of 1 indicates that coun-
+try had implemented the relevant policy in year, while 0 means no implementation. The time var-
+iable timeit is also binary, with 1 representing the post - policy implementation period and 0 for
+the pre - period.
+\par
+\leavevmode\hspace*{1.5em}To control for other factors that might influence cybercrime rates, we incorporated several
+control variables, including GDP, internet penetration rate, mobile broadband subscribers, tertiary
+education enrollment rate, legal measures, capacity development, and cooperation measures.
+\par
+\leavevmode\hspace*{1.5em}Given the varying magnitudes of these control variables, we normalized them using the min - max
+normalization method. This normalization ensured that all variables were on a comparable scale,
+preventing any single variable from disproportionately influencing the model results due to its
+large magnitude.
+
+\item \textbf{Model Specification}
+\par
+\leavevmode\hspace*{1.5em}The DID model was formulated as follows:
+  \[
+    Y_it = \alpha + \beta_{1} treatedit + \beta_{2} time_{it} + \beta_{3} (treated_{it} \times time_{it}) + \sum_{k} \gamma_k X_{kit} + \epsilon_{it}
+  \]
+\par
+\leavevmode\hspace*{1.5em}After categorizing the policies, we utilized the Difference - in - Differences (DID) approach
+to assess the causal impact of each policy theme on cybercrime rates.
+\end{enumerate}
+
+\subsection{Decoding the Policy Efficacy: LDA - DID Results Uncovered}
+
+\begin{enumerate}
+  \item \textbf{Cybercrime Criminal Legislation}
+\par
+\leavevmode\hspace*{1.5em}For the theme of Cybercrime Criminal Legislation, we chose Australia and Ireland as the
+experimental group and the UK and New Zealand as the control group. The Diff - in - Diff effect
+value was 0.151, but it was not significant ( $p>0.05$ ), suggesting that the policy in this area had
+no discernible impact on cybercrime rates. Before the experiment, the Diff effect value was 0.062
+( $p>0.05$ ), indicating no significant difference between the experimental and control groups.
+After the experiment, the Diff effect value was 0.212  ( $p>0.05$ ), still showing no significant
+difference. This lack of significance implies that, at least within the scope of our study, the existing
+cybercrime criminal legislation may not be effectively curbing cybercrimes.
+
+  \begin{table}[H]
+    \caption{Summary of the DID model for Cybercrime Criminal Legislation}
+    \centering
+    \begin{tabular}{cccccc}
+      \toprule
+      time & Item & \makecell{Effected value\\Normalized number of cases} & Standard error & t & p \\
+      \midrule
+
+      \multirow{3}{*}{Before}
+        & Control       & 0.009  &      &       &       \\
+        & Treated       & 0.071  &      &       &       \\
+        & Diff (T -- C) & 0.062  & 0.25 & 0.248 & 0.805 \\
+
+      \multirow{3}{*}{After}
+        & Control       & -0.326 &      &       &       \\
+        & Treated       & -0.113 &      &       &       \\
+        & Diff (T -- C) & 0.212  & null & null  & null  \\
+
+        & Diff-in-Diff  & 0.151  & 0.107 & 1.411 & 0.168 \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+        \footnotesize
+        \item Remarks: $R^2=0.713$ adjust $R^2=0.635$.\\
+        \item * p<0.05 ** p<0.01
+      \end{tablenotes}
+  \end{table}
+
+  \item \textbf{Data Protection and Privacy Regulations}
+\par
+\leavevmode\hspace*{1.5em}As most countries have related laws, the UK (without such policies in collected data) was
+chosen as the control group, and Australia (with similar internet penetration) as the experimental
+group.
+                                                                                                                       
+\par
+\leavevmode\hspace*{1.5em}The Diff - in - Diff value is 0.708, significant at the 5\% level ( $p=0.022$ ). Before the ex-
+periment, the Diff value of - 0.206 is not significant ( $p>0.05$ ), indicating no difference between
+groups. After the experiment, the Diff value of 0.502 is also not significant ( $p>0.05$ ).
+\par
+\leavevmode\hspace*{1.5em}Despite non - significant pre and post - experiment Diff values, the significant Diff - in - Diff
+value implies that Data Protection and Privacy Regulations are effective in curbing cybercrimes,
+likely by making data - related crimes more difficult.
+
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{lccccc}
+      \toprule
+        & \makecell{Regression\\Coefficient} & \makecell{Standard\\Error} & t & p & 95\% CI \\
+      \midrule
+      treated        & -0.206 & 0.236 & -0.874 & 0.396 & -0.708 $\sim$ 0.296 \\
+      time           & -0.814 & 0.185 & -4.39  & 0.001 & -1.209 $\sim$ -0.419 \\
+      $treated \times time$ & 0.708  & 0.278 & 2.547  & 0.022 & 0.116 $\sim$ 1.299 \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+        \footnotesize
+        \item Remarks:Explained Variable = Normalized Number of Cases\\
+        \item * p<0.05 ** p<0.01
+      \end{tablenotes}
+  \end{table}    
+
+\item \textbf{Cybersecurity Obligations of Network Operators}
+\par
+\leavevmode\hspace*{1.5em}For the theme of Cybersecurity Obligations of Network Operators, with Australia and China
+as the experimental group and France and the Netherlands as the control group, the Diff - in - Diff
+effect value was 0.310, demonstrating a strong positive effect. Before the experiment, the Diff
+effect value was - 0.402, which might be due to pre - existing differences in cyber - security pos-
+tures between the two groups. The significance of the interaction term ( P= 0.01 ) indicates that
+clearly defined cybersecurity obligations for network operators are effective. These obligations
+may require operators to conduct regular security audits, implement security patches promptly,
+and report security incidents in a timely manner. By doing so, they can proactively prevent cyberat-
+tacks and reduce the overall cybercrime rate.
+
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{lccccc}
+      \toprule
+        & \makecell{Regression\\Coefficient} & \makecell{Standard\\Error} & t & p & 95\% CI \\
+      \midrule
+      treated        & -0.402 & 0.126 & -3.204 & 0.003 & -0.658 $\sim$ -0.146 \\
+      time           & -0.448 & 0.095 & -4.688 & 0     & -0.642 $\sim$ -0.253 \\
+      $treated \times time$ & 0.31   & 0.113 & 2.75   & 0.01  & 0.080 $\sim$ 0.540 \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+        \footnotesize
+        \item Remarks:Explained Variable = Normalized Number of Cases\\
+        \item * p<0.05 ** p<0.01
+    \end{tablenotes}
+  \end{table}    
+
+\item \textbf{Critical Information Infrastructure Protection}
+\par
+\leavevmode\hspace*{1.5em}For Critical Information Infrastructure Protection, the Diff - in - Diff effect value was 0.286
+showing no significant impact. However, after the experiment, the Diff effect value was 0.634,
+indicating that the experimental group had a higher cybercrime rate than the control group. This
+\par
+\leavevmode\hspace*{1.5em}unexpected result could be because protecting critical information infrastructure is a complex task
+that involves multiple stakeholders and technical challenges. The existing policies may not be
+comprehensive enough to address all aspects of the protection, such as the coordination between
+different sectors and the continuous evolution of cyber threats.
+
+\item \textbf{Cybersecurity Incident Emergency Response Mechanisms}
+\par
+\leavevmode\hspace*{1.5em}When considering Cybersecurity Incident Emergency Response Mechanisms, the Diff - in -
+Diff effect value was - 0.189, indicating no significant impact. This may suggest that the current
+emergency response mechanisms are not well - designed or that there are difficulties in their im-
+plementation. For example, there may be a lack of clear communication channels between different
+response teams, or the response time may be too long to effectively mitigate the impact of cyber -
+security incidents.
+
+\item \textbf{Cross - Border Data Flow Rules}
+\par
+\leavevmode\hspace*{1.5em}For the theme of Cross - Border Data Flow Rules, with Australia and Ireland as the experi-
+mental group and the UK and Singapore as the control group, the significance of the interaction
+term between  treated and time ( $p=0.047$ ) suggests that the policy in this area is effective.
+This could be due to the clear regulation of cross - border data flow, which may prevent cyber-
+criminals from exploiting cross - border data loopholes.
+\end{enumerate}
+
+  \begin{table}[H]
+    \centering
+    \begin{tabular}{lccccc}
+      \toprule
+        & \makecell{Regression Co-\\efficient} & \makecell{Standard\\Error} & t & p & 95\% CI \\
+      \midrule
+      treated        & -0.402 & 0.126 & -3.204 & 0.003 & -0.658 $\sim$ -0.146 \\
+      time           & -0.448 & 0.095 & -4.688 & 0     & -0.642 $\sim$ -0.253 \\
+      $treated \times time$ & 0.31   & 0.113 & 2.75   & 0.01  & 0.080 $\sim$ 0.540 \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}
+        \footnotesize
+        \item Remarks:Explained Variable = Normalized Number of Cases\\
+        \item * p<0.05 ** p<0.01
+      \end{tablenotes}
+  \end{table}
+
+\par
+In summary, our analysis using LDA and DID has provided valuable insights into the effec-
+tiveness of different cyber - security policy themes. Data protection and privacy regulations, cy-
+bersecurity obligations of network operators, and cross - border data flow rules have shown posi-
+tive impacts on reducing cybercrime rates, while cybercrime criminal legislation, critical infor-
+mation infrastructure protection, and cybersecurity incident emergency response mechanisms may
+need further improvement. These findings can guide policymakers in formulating more effective
+cyber - security policies and enhancing national cyber - security postures.
+
+\section{MIC \& Factor Strategy: Demographics - Cybercrime Correlations}
+
+Building on the exploration of global cybercrime distribution and the assessment of national
+security policies' efficacy, we continue to explore the correlations between various national - level
+demographic factors, such as GDP, Internet Penetration Rate, Active mobile - broadband subscrip-
+tions, School enrollment in tertiary education, GDP per capita growth, and GNI per capita, and the
+                                                                                                                     
+analyze data from 20 representative countries. Additionally, factor analysis is conducted to further
+clarify the relationships. The results show that different variables have varying degrees of influ-
+ence on cybercrime cases across countries, and the overall average influence of variables also
+differs.
+
+\subsection{Analytical Framework: MIC Approach}
+
+Given the complexity and non - linear nature of real - world data, traditional correlation met-
+rics like Pearson or Spearman coefficients may fall short. The MIC method, renowned for its uni-
+versality, fairness and symmetry, emerges as a fitting choice.\cite{9}
+
+\subsubsection{Data Preparation}
+
+Data on a suite of variables, including GDP, Internet Penetration Rate(IPR), Active mobile -
+broadband subscriptions(AMBS), School enrollment in tertiary education(SETE), GDP per capita
+growth(GDG), GNI per capita(GNC), and the Number of Cybercrime Cases, was amassed from
+20 representative countries. These data were then ingested into a Pandas DataFrame, with the rel-
+evant features (independent variables) and the target variable (Number of Cybercrime Cases) me-
+ticulously extracted. Of course, rigorous data pre - processing was carried out to ensure data integ-
+rity and suitability for analysis.
+
+\subsubsection{MIC Computation}
+
+For each pair of a feature variable and the Number of Cybercrime Cases (e.g., GNI per capita
+and the Number of Cybercrime Cases), the scatter plots were subjected to a gridding process. By
+exploring a plethora of i and j scale combinations (e.g., i = 2, j = 2, among numerous others), mul-
+tiple gridding scenarios were generated. The mutual information for each scenario was computed,
+and the scheme yielding the maximum mutual information was identified. This maximum value
+was then normalized. Through an exhaustive search across all scale combinations, the MIC value,
+representing the strongest association, was determined for each variable - target pair.
+
+\subsection{Factor Analysis for Deeper Understanding}
+
+In order to make the research results more convincing and provide effective reference for the
+implementation of national policies, factor analysis was utilized as a supplementary method.\cite{10}
+First, Bartlett's test of sphericity was carried out, and the result with a p - value of 0.000 indicated
+the suitability of factor analysis for the data.
+The factor analysis was then performed on variables including GDP per capita growth, GNI
+per capita, Internet access, Active mobile - broadband subscriptions, and School enrollment in
+tertiary education. Two factors were extracted, both having eigenvalues greater than 1. After rota-
+tion, these factors explained 50.657\% and 24.605\% of the variance respectively, with a cumulative
+variance explanation of 75.262\%.
+
+A composite score was formulated as follows:
+\[
+  Composite\ Score = 0.673 \times Factor\ Score_1 + 0.327 \times Factor\ Score2
+\]
+
+Subsequently, step - by - step linear regression analysis was conducted using Factor 1, Factor
+2, and Y(the Number of Cyber - crime Incidents (NSCI)). It was found that Factor 2 had no direct
+impact on NSCI, resulting in the equation:
+
+\[
+  Y = 69.676 + 7.219 \times Factor1
+\]
+
+The calculated result of the coefficient of each variable as follows:
+
+\begin{table}[H]
+  \centering
+  \caption{The Coefficient of Each Variable}
+  \begin{tabular}{cccccc}
+    \toprule
+      & GNC & GDG & SETE & AMBS & IPR \\
+    \midrule
+    Factor 1 & 0.278 & -0.082 & 0.272 & -0.322 & 0.376 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+By substituting the expression of Factor Score 1 into the NSCI equation, the final relationship
+was derived:
+\[
+  Y = 69.676 + 2.007 \times GNC - 0.592 \times GDG + 1.964 \times SETE - 2.324 \times AMBS + 2.714 \times IPR
+\]
+
+This process enabled a more in - depth exploration of the relationships between the demo-
+graphic variables and the number of cyber - crime incidents, complementing the insights from the
+MIC analysis.
+
+\subsection{Results Unveiled: Variable Impact Profiles}
+\subsubsection{Intra - variable Variations across Countries}
+
+\begin{itemize}[\ding{226}]
+ \item \textbf{GDP:} MIC values for GDP and cybercrime cases vary across countries. For example, Russia's
+0.71 shows a strong link, perhaps due to its economic scale and structure. In contrast, Spain
+and Belgium's 0.25 indicates GDP has a minor role, with other factors being more influential.
+
+ \item \textbf{Internet Penetration Rate:} Though Internet penetration rate - cybercrime MIC values are
+generally high, there are country differences. Australia's 0.97 and Singapore's 0.74 suggest
+that usage environments and security measures play a role. Russia's high - activity digital
+landscape may strengthen the link, while Singapore's security and user education weaken it.
+
+ \item \textbf{Active mobile - broadband subscriptions:} MIC values for this variable differ greatly. 
+ Belgium's 0.88 implies a strong connection to cybercrime, maybe due to usage patterns. 
+Australia's 0.48 indicates a weaker link, likely because of good network governance and user awareness.
+
+ \item \textbf{Tertiary Education Enrollment:} The MIC values for tertiary education enrollment and cy-
+bercrime also display a wide range of variation. China has a relatively high MIC value of 0.69,
+which could be related to the online behavior and technological proficiency of the highly -
+educated population. Conversely, the Netherlands and Singapore have lower MIC values of
+0.35, indicating that tertiary education enrollment has a less significant influence on cyber-
+crime in these countries.
+                                                                                                               
+ \item \textbf{GDP per capita growth:} Turkey exhibited a strikingly high MIC value of 0.96, highlighting
+a close connection between GDP per capita growth and cybercrime, possibly driven by the
+rapid evolution of network - based economic activities during its growth phase. In Russia, the
+MIC value of 0.65 was relatively lower, implying that GDP per capita growth has a less sig-
+significant impact on cybercrime, possibly due to its well - established economic and cyber -
+regulatory frameworks.
+\end{itemize}
+
+\subsubsection{Inter - variable Comparative Analysis}
+
+From the average MIC values, the Internet Penetration Rate demonstrated a relatively high
+average MIC value of 0.849 with the Number of Cybercrime Cases, underscoring its strong overall
+association. As the primary medium for cybercrime, the Internet's penetration level directly shapes
+the landscape for cybercriminal activities. Active mobile - broadband subscriptions also showed a
+substantial average MIC value of 0.682, indicating that the proliferation of mobile broadband con-
+tributes to the cybercrime risk. In contrast, GDP had the lowest average MIC value of 0.3215,
+suggesting that the mere magnitude of GDP has a limited impact on cybercrime, with network -
+related and economic structural factors likely playing more complex roles.
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width=10cm]{figure9.png}
+      \caption{MIC values for each variable}
+  \end{figure}
+
+In summary, different variables exhibit varying degrees of influence across countries, and
+their average impact levels also diverge. Variables like the Internet Penetration Rate, Active
+mobile - broadband subscriptions, and GDP per capita growth show relatively strong correla-
+tions with cybercrime, while GDP and tertiary education enrollment have more subdued effects,
+which is similar to those of factor analysis. These findings offer valuable insights into the intricate
+interplay between national - level characteristics and cybercrime, guiding the formulation of tar-
+geted cyber - security strategies. However, further research is imperative to explore the underlying
+mechanisms in greater depth and account for additional complex factors to more effectively com-
+bat cybercrime.
+
+\section{Sensitivity Analysis}
+
+Security Policies vs distribution of cybercrimes Differences-in-Differences Model and Maximal
+ Information Coefficient Model are our basic models, so we con-ducted sensitivity analysis
+on these two models.                                                                                                       
+
+In the formula of the DID model for the comparison of security policies and crime distribution,
+treatedtime is the interaction term, which is the core of the DID model, and its coefficient $\beta$ 
+measures the causal effect of policy implementation on the number of cybercrimes.
+We selected the fourth group - Cybersecurity Obligations of Network Operators for analysis, al-
+lowing $\beta$ to fluctuate by 5\% ($0.286\pm 0.0143$), and plotted the changes in the p-value (which reflects
+the effect value of significance), and the Diff-in-Diff effect value (before and after the experiment)
+with the change in $\beta$, as shown in the figure below. It is easy to see that the changes in the three
+are stable with the fluctuation of $\beta$ (p changed within a range of $0.229\pm 0.0005$). Calculations show
+that the change amplitude does not exceed 5\%, which meets our stability expectations and proves
+that our data selection is reasonable. The model has passed the sensitivity analysis.
+
+  \begin{figure}[H]
+      \centering
+      \includegraphics[width=10cm]{figure9.png}
+      \caption{Relationship between $\beta$, P, DID(before) and DID(after)}
+  \end{figure}
+
+What's more, many institutions, especially investment firms, are reluctant to report hacker
+attacks due to concerns that disclosing such attacks could damage their reputation, leading to cus-
+tomer loss and business impairment. Instead, they tend to quietly pay the ransom. Therefore, to
+verify the robustness and stability of the MIC model, we added random noise to the data to simulate
+the potential impact of hackers and then calculated the MIC values for the data that might contain
+outliers and observed the changes in these values. After repeating these steps multiple times, we
+calculated the mean and standard deviation of the MIC values to evaluate the model's stability.
+
+Taking Belgium as an example, we randomly added noise to the data multiple times and then
+calculated the average MIC values of six indicators, which were compared with the original data.
+The results are presented in the WiFi infographic. If the end of the ring exceeds the gray asymptote,
+the new MIC value is higher than the previous one.As expected, the new average MIC values of
+the six indicators are all stably distributed near the gray dotted line, indicating that the robustness
+and stability of the MIC model are quite remarkable.
+
+\section{Model Evaluation and Further Discussion}
+\subsection{Strengths}
+\begin{enumerate}
+  \item \textbf{Comprehensive Data - Driven Analysis}
+
+  \par
+\leavevmode\hspace*{1.5em}The use of multiple data sources and indices, such as the National Cyber Security Index
+(NCSI), Cybersecurity Exposure Index (CEI), and Legal Measures from the Global Cybersecurity
+Index, provides a comprehensive view. These data sources capture different dimensions of cyber-
+crime, from a country's preparedness against threats (NCSI) to the frequency of malicious attacks
+and cybersecurity commitment (CEI), and the legal framework for prosecution. Calculating the
+network threat reporting rate further enriches the dataset. This multi - source data approach enables
+a more in - depth understanding of cybercrime distribution patterns globally.
+  \item \textbf{Advanced Analytical Methods}
+  \begin{itemize}[\ding{226}]
+  \item   We creatively came up with the KDMF model, which integrated these four sub - models
+and provided a holistic view of cybercrime. It enables a comprehensive analysis of cy-
+bercrime distribution, policy effectiveness, and the influence of demographics, offering
+a solid foundation for data - driven development and refinement of national cybersecurity
+policies.
+
+ \item When evaluating the impact of national security policies on cybercrime rates, the DID
+model proves indispensable. By comparing an experimental group of countries imple-
+menting a specific policy with a control group of similar - internet - penetration countries
+lacking that policy, while controlling for factors like GDP and internet penetration rate,
+it can precisely isolate the policy's causal effect. This allows researchers to pinpoint
+which policy components are truly effective in curbing cybercrime, whether it's strength-
+ening cybercrime criminal legislation or enhancing data protection regulations.
+
+ \item The combination of MIC and factor analysis offers a more comprehensive analysis
+framework. Factor analysis provides a high - level view of the data structure, highlighting
+the underlying factors that drive the relationships among variables. MIC, in turn, vali-
+dates and supplements the results of factor analysis. By using MIC to cross - check the
+relationships identified by factor analysis, we can ensure that all possible relationships,
+whether simple linear ones or complex non - linear ones, are thoroughly explored. This
+mutual verification not only enhances the accuracy of our analysis but also deepens our
+understanding of the complex interplay between national demographics and cybercrime
+cases.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Weaknesses}
+\begin{enumerate}
+  \item \textbf{Data - related Limitations}
+The calculation of the network threat reporting rate depends on data from THE VERIS COM-
+MUNITY DATABASE (VCDB) and the World Bank. Since VCDB only includes publicly dis-
+closed data breaches, it may lead to an under - estimation of the actual number of cyber threats.
+  \item \textbf{Model - related Constraints} 
+  \begin{itemize}[\ding{226}]
+  \item \textbf{K - clustering} analysis may oversimplify the complex relationships between different
+factors contributing to cybercrime distribution. It assumes distinct and homogeneous
+clusters, while in reality, there may be overlapping characteristics and complex interac-
+tions between countries within and across clusters.
+                                                                                                                  
+  \item The application of the DID model faces challenges in selecting appropriate experimental
+and control groups. Identifying countries with exactly the same or similar internet pene-
+tration rates and other characteristics is difficult, and there may be unobserved factors
+that differ between the two groups, confounding the results. Cultural differences, political
+stability, or law enforcement efficiency, which can influence cybercrime rates, may not
+be accounted for in the model.
+
+  \item Although the MIC method can capture non - linear relationships, interpreting the MIC
+values can be complex. A high MIC value does not necessarily imply causation, and the
+values may be affected by data scale and range. Different data transformations can lead
+to different MIC values, making cross - study comparisons difficult.
+  \end{itemize}
+\end{enumerate}
+
+\subsection{Further Discussion}
+\begin{enumerate}
+  \item \textbf{Augmenting Data Quality: Expansion and Standardization}\par
+\leavevmode\hspace*{1.5em}Future studies should cast a wider net to gather data from diverse sources. This includes in-
+corporating data from multiple international organizations, private - sector reports, and compre-
+hensive cyber threat databases. Data standardization is equally vital. Harmonizing data collection
+and reporting methods across different sources ensures data comparability.
+  \item \textbf{Policy - Oriented Exploration}\par
+\leavevmode\hspace*{1.5em}A more comprehensive evaluation of national cybersecurity policies is imperative based on
+the current analysis. Future research should delve into how different policy components interact
+with each other and with demographic factors. For example, understanding how the combination
+of data protection regulations and cybercrime criminal legislation impacts cybercrime rates across
+different economic and social contexts can offer valuable insights for policymakers.
+In addition, given the disparities in cybercrime distribution and policy effectiveness among
+countries, policies must be tailored to specific national contexts. Future research can leverage the
+analysis results to develop more targeted and effective cybersecurity policies. This involves con-
+sidering each country's unique demographic, economic, and social characteristics, ensuring that
+policies are not only relevant but also practical and impactful in combating cybercrime.
+\end{enumerate}                                                                                                   
+
+\newpage
+\begin{thebibliography}{99}
+\bibitem{1} Morgan, S. (2020, November 13). Cybercrime To Cost The World \$10.5 Trillion Annually By
+2025. Cybercrime Magazine.
+\bibitem{2} Verizon RISK Team. (n.d.). The VERIS Community Database (VCDB). VERIS Frame-
+work. \\ https://verisframework.org/vcdb.html
+\bibitem{3} e - Governance Academy. (2016, May 23). The National Cyber Security Index gives govern-
+ments a tool for developing cyber security. e - Governance Academy. \\ https://ega.ee/news/the-national-cyber-security-index-gives-governments-a-tool-for-developing-cyber-security/
+\bibitem{4} Password Managers. (n.d.). Cybersecurity Exposure Index. Password Managers. \\ https://passwordmanagers.co/cybersecurity-exposure-index/
+\bibitem{5} International Telecommunication Union. (2024). Global Cybersecurity Index 2024 (5th Edi-
+tion).
+\bibitem{6} Lloyd, S. P. (1982). Least squares quantization in PCM. IEEE Transactions on Information
+Theory, 28(2), 129-137. https://doi.org/10.1109/TIT.1982.1056489
+\bibitem{7} Blei, D. M., Ng, A. Y., \& Jordan, M. I. (2003). Latent Dirichlet Allocation. Journal of Machine
+Learning Research, 3, 993-1022.
+\bibitem{8} Card, D., \& Krueger, A. B. (1994). Minimum wages and employment: A case study of the fast-
+food industry in New Jersey and Pennsylvania. The American Economic Review, 84(4), 772-793.
+\bibitem{9} Reshef, D. N., Reshef, Y. A., Finucane, H. K., Grossman, S. R., McVean, G., Turnbaugh, P.
+J., ...\& Sabeti, P. C. (2011). Detecting novel associations in large data sets. Science, 334(6062),
+1518-1524.
+\bibitem{10} Hair, J. F., Anderson, R. E., Tatham, R. L., \& Black, W. C. (1998). Multivariate Data Analysis
+(5th ed.). Prentice Hall.
+\end{thebibliography}
+
+\end{document}

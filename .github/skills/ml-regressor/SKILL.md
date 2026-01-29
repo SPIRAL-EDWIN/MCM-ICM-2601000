@@ -358,3 +358,52 @@ plt.savefig('partial_dependence.png', dpi=300)
 ```
 
 This is O-Prize level analysis showing causal-like relationships.
+
+## References & Tutorials
+
+### Integrated Course Materials
+
+This skill now includes comprehensive regression tutorials from 数模加油站:
+
+#### `references/` Folder:
+- **17-回归分析概述.pdf**: Overview of regression analysis theory
+- **18-一元线性回归模型.pdf**: Simple linear regression (single variable)
+- **19-多元线性回归模型.pdf**: Multiple linear regression
+- **20-非线性回归模型.pdf**: Nonlinear regression methods
+
+#### `examples/` Folder:
+- **Regress.py / Regress.m**: Simple linear regression implementation (第18课)
+- **MultipleLinearRegression.ipynb / .mlx**: Multiple regression examples (第19课)
+- **code1.m, code2.py, code3.py, etc.**: Nonlinear regression examples (第20课)
+- **coe1.py, volum.m**: Additional regression utilities
+
+### Learning Path
+
+1. **Beginners**: Start with 第17课 (overview) → 第18课 (simple regression)
+2. **Intermediate**: 第19课 (multiple regression) → Run `MultipleLinearRegression.ipynb`
+3. **Advanced**: 第20课 (nonlinear) → Use Random Forest/XGBoost (this skill)
+
+### When to Use Traditional Regression vs ML
+
+| Scenario | Method | Reason |
+|----------|--------|--------|
+| Need interpretable coefficients | Linear regression (第18-19课) | Clear β values |
+| Small sample (< 50) | Simple regression (第18课) | Avoid overfitting |
+| Complex nonlinear | Random Forest / XGBoost (this skill) | Higher accuracy |
+| Feature selection critical | This skill | Feature importance built-in |
+
+## Time Budget
+
+- **Data preparation**: 30-60 min (use `data-cleaner`)
+- **Model training**: 20-40 min (with hyperparameter tuning)
+- **Feature importance analysis**: 15-30 min
+- **Validation & plots**: 30-45 min
+- **Total**: 1.5-3 hours
+
+## Related Skills
+
+- `data-cleaner`: Preprocessing before regression
+- `pca-analyzer`: Dimensionality reduction for many features
+- `sensitivity-master`: Analyze prediction sensitivity
+- `visual-engineer`: Publication-quality plots
+

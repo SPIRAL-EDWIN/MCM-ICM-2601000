@@ -1,0 +1,2 @@
+## 2026-01-28
+- Extracted technical stack for paper_1: CV preprocessing (grayscale, Gaussian denoise, edge detection), 2D normal wear-depth fit, Archard’s wear law for flow, direction index from wear asymmetry, Navier–Stokes/continuity PDE solved via FDM (Forward Euler + central difference), exponential traffic decay, MSE + Monte Carlo CI for age reliability, Pearson correlation + C-14 for material sourcing, impulse vs uniform flow wear model.

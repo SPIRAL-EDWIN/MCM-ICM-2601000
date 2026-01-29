@@ -1,7 +1,8 @@
 # MCM/ICM 2026 竞赛模型库完全指南 (Master Guide)
 
-**版本**: 2.0 (2026年1月28日 - 融合版)  
-**包含技能**: 28个核心技能  
+**版本**: 3.0 (2026年1月28日 - 完整整合版)  
+**包含技能**: 44个核心技能 (+9个新增)  
+**整合教程**: 23课完整教程（数模加油站）  
 **适用对象**: MCM/ICM 参赛队伍、数学建模爱好者
 
 本文档整合了 **模型列表 (MODELS LIST)**、**速查卡 (QUICK REFERENCE)** 和 **优化集成指南 (OPTIMIZATION INTEGRATION)**，是比赛期间的唯一核心参考文档。
@@ -41,12 +42,14 @@
 │  └─ 复杂非线性 (>500点) → lstm-forecaster
 │
 ├─ "做决策 / 排名" (Decision/Rank)
-│  ├─ 客观权重 (数据驱动) → entropy-weight-method
-│  ├─ 主观权重 (专家经验) → ahp-method
-│  └─ 最终排名 → topsis-scorer
+│  ├─ 客观权重 (数据驱动) → entropy-weight-method (第3课)
+│  ├─ 主观权重 (专家经验) → ahp-method (第1课)
+│  ├─ 模糊评价 (定性指标) → fuzzy-evaluation (第4课) 🆕
+│  ├─ 灰色关联 (小样本关联) → grey-relation (第5课) 🆕
+│  └─ 最终排名 → topsis-scorer (第2课)
 │
 ├─ "机器学习预测" (Predict with ML)
-│  └─ 回归/特征重要性 → ml-regressor
+│  └─ 回归/特征重要性 → ml-regressor (第17-20课)
 │
 ├─ "机理建模" (Dynamics)
 │  ├─ 单一种群增长 → logistic-growth
@@ -55,15 +58,25 @@
 │  └─ 通用方程求解 → differential-equations
 │
 ├─ "网络与路径" (Network)
-│  ├─ 找最短路径/路由 → shortest-path (Dijkstra/Floyd)
+│  ├─ 图论基础 (概念/遍历) → graph-theory (第14课) 🆕
+│  ├─ 找最短路径/路由 → shortest-path (Dijkstra/Floyd) (第15课)
+│  ├─ 最小生成树 (网络设计) → minimum-spanning-tree (第16课) 🆕
 │  └─ 找关键节点/影响力 → network-centrality
 │
 ├─ "优化求解" (Optimize)
-│  ├─ 离散/组合问题 (TSP/排班) → genetic-algorithm
-│  ├─ 连续多峰 (易陷局部最优) → simulated-annealing
-│  ├─ 连续光滑 (追求速度) → particle-swarm
-│  ├─ 多目标 (既要又要) → multi-objective-optimization
+│  ├─ 线性规划 (LP) → linear-programming (第7课) 🆕
+│  ├─ 非线性规划 (NLP) → nonlinear-programming (第9课) 🆕
+│  ├─ 整数规划 (IP/0-1) → integer-programming (第10课) 🆕
+│  ├─ 最大最小化 (Minimax) → minimax-programming (第11课) 🆕
+│  ├─ 动态规划 (DP) → dynamic-programming (第13课) 🆕
+│  ├─ 离散/组合问题 (TSP/排班) → genetic-algorithm (第23课)
+│  ├─ 连续多峰 (易陷局部最优) → simulated-annealing (第23课)
+│  ├─ 连续光滑 (追求速度) → particle-swarm (第23课)
+│  ├─ 多目标 (既要又要) → multi-objective-optimization (第12课)
 │  └─ 简单参数搜索 → automated-sweep
+│
+├─ "反问题求解" (Inverse Problems) ⭐ NEW
+│  └─ 从观测数据反推模型参数 (带不确定性量化) → bayesian-inversion
 │
 ├─ "验证模型" (Validate)
 │  ├─ 寻找最佳参数 → automated-sweep
@@ -76,10 +89,19 @@
 │  └─ → modular-modeler
 │
 ├─ "画图" (Figures)
-│  └─ → visual-engineer
+│  ├─ 传统图表 (matplotlib) → visual-engineer
+│  └─ 现代Web图表 (流程图/自定义) → web-artifacts-builder
 │
-└─ "写论文" (Write)
-   └─ → latex-transformer
+├─ "写论文" (Write)
+│  ├─ LaTeX协作写作 → latex-coauthoring
+│  └─ Markdown转LaTeX → latex-transformer
+│
+├─ "处理Excel数据" (Excel/CSV)
+│  └─ → xlsx
+│
+└─ "处理PDF" (PDF)
+   ├─ 提取文献信息 → pdf
+   └─ 合并提交文件 → pdf
 ```
 
 ---
@@ -90,12 +112,19 @@
 |------|---------|---------|---------|
 | **基础工具** | | | |
 | data-cleaner | 10 min | 20 min | 30 min |
+| xlsx | 10 min | 30 min | 60 min |
 | visual-engineer | 5 min | 10 min | 20 min |
+| web-artifacts-builder | 20 min | 45 min | 90 min |
+| latex-coauthoring | 2 hours | 15 hours | 30 hours |
 | latex-transformer | 5 min | 10 min | 15 min |
+| pdf (文献提取) | 10 min | 30 min | 60 min |
+| pdf (提交组装) | 15 min | 30 min | 60 min |
 | **评价类** | | | |
 | entropy/topsis | 10 min | 15 min | 25 min |
 | ahp-method | 15 min | 25 min | 40 min |
 | pca-analyzer | 15 min | 20 min | 30 min |
+| fuzzy-evaluation | 20 min | 30 min | 50 min |
+| grey-relation | 15 min | 25 min | 40 min |
 | **预测类** | | | |
 | grey-forecaster | 10 min | 15 min | 25 min |
 | arima-forecaster | 20 min | 35 min | 60 min |
@@ -105,14 +134,24 @@
 | reaction-diffusion | 30 min | 50 min | 90 min |
 | differential-eqn | 20 min | 35 min | 60 min |
 | **网络类** | | | |
+| graph-theory | 20 min | 30 min | 50 min |
 | shortest-path | 15 min | 25 min | 40 min |
+| minimum-spanning-tree | 15 min | 25 min | 40 min |
 | network-centrality | 20 min | 30 min | 50 min |
 | **优化类** | | | |
+| linear-programming | 20 min | 40 min | 1 hour |
+| nonlinear-programming | 30 min | 50 min | 1.5 hours |
+| integer-programming | 30 min | 50 min | 1.5 hours |
+| minimax-programming | 25 min | 40 min | 1 hour |
+| dynamic-programming | 30 min | 1 hour | 2 hours |
 | automated-sweep | 30 min | 1 hour | 2 hours |
 | particle-swarm | 15 min | 25 min | 45 min |
 | simulated-annealing | 20 min | 35 min | 60 min |
 | genetic-algorithm | 30 min | 50 min | 90 min |
 | multi-objective | 1 hour | 1.5 hours | 3 hours |
+| **反问题类** ⭐ | | | |
+| bayesian-inversion (MAP) | 15 min | 30 min | 1 hour |
+| bayesian-inversion (PSO+MCMC) | 45 min | 1.5 hours | 3 hours |
 | **验证类** | | | |
 | robustness-check | 30 min | 45 min | 1.5 hours |
 | monte-carlo | 30 min | 1 hour | 2 hours |
@@ -155,6 +194,19 @@
 - **定位**: 综合排名工具。
 - **经典组合**: Entropy + AHP + TOPSIS (主客观点综合赋权)。
 - **输出**: 各方案的相对贴近度得分及排名。
+
+#### 6. **fuzzy-evaluation** (模糊综合评价) 🆕
+- **定位**: 定性指标量化评价。
+- **核心步骤**: 因素集 → 评语集 → 隶属度矩阵 → 权重 → 模糊运算。
+- **场景**: 环境质量、教学质量、风险评估等模糊指标。
+- **教程**: 第4课
+
+#### 7. **grey-relation** (灰色关联分析) 🆕
+- **定位**: 小样本关联度分析。
+- **核心步骤**: 无量纲化 → 关联系数 → 关联度 → 排序。
+- **场景**: 影响因素分析、小样本决策。
+- **与相关系数区别**: 不要求大样本、不要求线性。
+- **教程**: 第5课
 
 ### B. 预测与时间序列类 (Forecasting & Time Series)
 
@@ -201,33 +253,123 @@
 
 ### D. 网络与图论类 (Network & Graph Theory)
 
-#### 14. **shortest-path** (最短路径)
+#### 14. **graph-theory** (图论基础) 🆕
+- **定位**: 图的基本概念和算法（DFS/BFS/连通性）。
+- **核心内容**: 邻接矩阵、邻接表、图遍历、连通分量。
+- **场景**: 社交网络分析、依赖关系、交通网络基础。
+- **教程**: 第14课
+
+#### 15. **shortest-path** (最短路径)
 - **定位**: Dijkstra / Floyd / Bellman-Ford / A* 算法库。
 - **场景**: 物流配送、应急救援、路由规划。
 - **流程**: 构建邻接矩阵 → 算距离 → 输入优化模型。
+- **教程**: 第15课
 
-#### 15. **network-centrality** (中心性分析)
+#### 16. **minimum-spanning-tree** (最小生成树) 🆕
+- **定位**: 连接所有节点的最小权重树（Prim/Kruskal）。
+- **场景**: 网络设计、道路建设、管道铺设。
+- **教程**: 第16课
+
+#### 17. **network-centrality** (中心性分析)
 - **定位**: 识别网络中的关键节点 (Key Nodes)。
 - **指标**: 度 (Degree)、介数 (Betweenness)、接近 (Closeness)、特征向量 (Eigenvector)。
 - **场景**: 找社交网络意见领袖、电网脆弱节点、超级传播者。
 
 ### E. 优化与规划类 (Optimization & Planning)
 
-#### 16. **genetic-algorithm** (遗传算法)
+#### 18. **linear-programming** (线性规划) 🆕
+- **定位**: 线性目标函数 + 线性约束。
+- **场景**: 资源分配、生产计划、运输问题。
+- **工具**: Python (scipy.linprog), MATLAB (linprog)。
+- **教程**: 第7课
+
+#### 19. **nonlinear-programming** (非线性规划) 🆕
+- **定位**: 非线性目标函数或约束。
+- **场景**: 工程设计、最优控制、参数拟合。
+- **工具**: Python (scipy.minimize), MATLAB (fmincon)。
+- **注意**: 需要初始猜测值，可能有局部最优。
+- **教程**: 第9课
+
+#### 20. **integer-programming** (整数规划) 🆕
+- **定位**: 决策变量必须是整数（0-1决策、离散数量）。
+- **场景**: 背包问题、指派问题、排班、选址。
+- **工具**: Python (scipy.milp, pulp), MATLAB (intlinprog)。
+- **教程**: 第10课
+
+#### 21. **minimax-programming** (最大最小化规划) 🆕
+- **定位**: 优化最坏情况（鲁棒优化）。
+- **场景**: 风险管理、博弈论、最坏情况设计。
+- **技巧**: 转化为标准优化（引入辅助变量）。
+- **教程**: 第11课
+
+#### 22. **dynamic-programming** (动态规划) 🆕
+- **定位**: 多阶段决策，最优子结构。
+- **场景**: 背包、最优路径、资源分配、换硬币。
+- **核心**: 状态定义 + 状态转移方程。
+- **教程**: 第13课
+
+#### 24. **genetic-algorithm** (遗传算法)
 - **特点**: 全局搜索，适合离散编码。
 - **场景**: 选址、排班、路径规划。
+- **教程**: 第23课
 
-#### 17. **simulated-annealing** (模拟退火)
+#### 25. **simulated-annealing** (模拟退火)
 - **特点**: 原理简单，擅长跳出局部最优。
 - **场景**: 复杂函数寻优。
+- **教程**: 第23课
 
-#### 18. **particle-swarm** (粒子群)
+#### 26. **particle-swarm** (粒子群)
 - **特点**: 收敛快，实现简单。
 - **场景**: 连续参数拟合。
+- **教程**: 第23课
 
-#### 19. **multi-objective-optimization** (多目标 NSGA-II)
+#### 27. **multi-objective-optimization** (多目标 NSGA-II)
 - **定位**: 寻找 Pareto 前沿面。
 - **场景**: "既要成本低，又要质量高" 的冲突目标优化。
+- **教程**: 第12课
+
+### F. 反问题与参数估计类 (Inverse Problems & Parameter Estimation) ⭐ NEW
+
+#### 20. **bayesian-inversion** (贝叶斯参数反演) 🔥 O-Award Differentiator
+- **技能定位**: 从观测数据反推模型参数，并量化不确定性（95%置信区间）。
+- **核心算法**: 
+  - **PSO + MCMC**: 粒子群全局搜索 + 马尔可夫链蒙特卡洛局部采样
+  - **MAP Grid**: 最大后验估计（快速原型）
+- **数学框架**:
+  ```
+  先验: p(θ) = p(α) × p(N) × p(T)
+  似然: p(h_obs | θ) ∝ exp(-E(θ))
+  后验: p(θ | h_obs) ∝ p(θ) × p(h_obs | θ)
+  ```
+- **适用场景**:
+  - **材料科学**: 观测磨损深度 → 推断材料硬度、使用年限
+  - **考古学**: 台阶磨损分布 → 推断人流量、使用方向
+  - **地球物理**: 地震波数据 → 推断地下结构参数
+  - **流行病学**: 感染数据 → 推断传播率、接触率
+- **输出示例**:
+  ```
+  α = 5.2×10⁻⁹ [4.8×10⁻⁹, 5.6×10⁻⁹] (95% CI)
+  N = 487 [450, 520] 人/天
+  T = 98 [92, 105] 年
+  收敛诊断: 接受率=0.28, R-hat=1.02 < 1.1 ✓
+  ```
+- **为什么这是O奖关键**:
+  - ✅ **MCM 2025 O奖论文分析**: 5篇O奖论文中，2篇明确使用贝叶斯框架
+  - ✅ **关键差异**: 大多数队伍只报告点估计，O奖队伍量化不确定性
+  - ✅ **论文加分点**: "We quantify parameter uncertainty using Bayesian inference"
+- **时间预算**:
+  - 快速原型 (MAP Grid): 10-20分钟
+  - 完整分析 (PSO+MCMC): 1-2小时（含参数调优）
+- **使用流程**:
+  1. Day 1: 构建前向模型（物理方程）
+  2. Day 2: 集成bayesian-inversion，运行PSO+MCMC
+  3. Day 3: 报告参数估计值 ± 95% CI
+  4. Day 4: 论文中展示收敛诊断、敏感度分析
+- **依赖**: numpy, scipy, matplotlib
+- **关键文件**: 
+  - `README.md`: 完整技术文档（数学理论、API参考）
+  - `QUICKSTART.md`: 5分钟快速上手
+  - `example_stair_wear.py`: 完整工作示例（合成数据验证）
 
 ---
 
@@ -292,6 +434,34 @@
 - **定位**: Markdown 转 LaTeX 代码。
 - **场景**: 快速生成公式、表格、引用。
 
+### 28. **xlsx** (Excel数据处理专家)
+- **定位**: MCM/ICM专用数据预处理工具，处理原始Excel/CSV数据。
+- **核心功能**: 数据清洗（缺失值、异常值）、归一化（TOPSIS/AHP准备）、统计分析、特征工程。
+- **场景**: 比赛初期快速处理原始数据，生成建模就绪的数据集。
+- **时间预算**: 快速清洗10-30分钟，完整处理30-60分钟。
+
+### 29. **latex-coauthoring** (LaTeX协作写作专家)
+- **定位**: MCM/ICM论文LaTeX写作全流程指导，特别强化Summary Sheet（摘要页）。
+- **核心功能**: 论文结构搭建、数学公式格式化、Summary Sheet打磨、学术语言规范。
+- **关键特色**: 三阶段写作流程（结构蓝图→章节起草→Summary Sheet打磨），Summary Sheet为王的策略。
+- **场景**: 论文起草（60-80小时）、Summary Sheet最终打磨（84-92小时）。
+- **时间预算**: 结构搭建2-4小时，章节起草10-20小时，Summary Sheet打磨4-8小时。
+
+### 30. **web-artifacts-builder** (Web可视化设计师)
+- **定位**: 创建出版级、有区别度的图表和流程图，超越Excel/Matplotlib默认样式。
+- **核心功能**: 模型架构流程图、系统动力学图、自定义数据可视化（Sankey、Chord、Network图）。
+- **技术栈**: HTML/CSS/SVG/React + D3.js/Chart.js/Recharts。
+- **输出方式**: 生成Web artifact，用户截图后导入LaTeX（\includegraphics）。
+- **场景**: 需要专业、现代、有视觉冲击力的图表时使用。
+- **时间预算**: 简单流程图20-30分钟，自定义图表30-60分钟，复杂D3.js图表60-90分钟。
+
+### 31. **pdf** (PDF处理与提交专家)
+- **定位**: 文献综述支持（PDF信息提取）+ 最终提交组装（PDF合并与验证）。
+- **核心功能**: 从学术论文提取文本/表格/公式、合并最终提交PDF（Control Sheet + Main Paper + Code Appendix）、验证提交合规性（页数、字体、格式）。
+- **关键时间节点**: 文献综述（0-24小时）、提交组装（90-96小时）。
+- **场景**: 快速从参考文献提取关键信息、确保最终提交符合MCM/ICM规则。
+- **时间预算**: 批量文献提取30分钟，提交组装与验证30-60分钟。
+
 ---
 
 ## 🚀 经典调用流程示例
@@ -316,16 +486,24 @@
 3. **Optimize**: `multi-objective-optimization` 寻找经济/环境平衡点。
 4. **Decision**: `pareto-frontier` + `robustness-check` 验证政策。
 
+**场景 4：材料磨损反问题 (Inverse Problem - Stair Wear)** ⭐ NEW
+1. **Data**: `data-cleaner` 清洗3D扫描点云数据。
+2. **Forward**: 构建Archard磨损定律前向模型。
+3. **Inversion**: `bayesian-inversion` 反推材料系数、人流量、使用年限。
+4. **Output**: 报告参数估计 ± 95% CI，展示后验分布。
+5. **Validation**: `sensitivity-master` 分析参数敏感性。
+
 ---
 
 ## 🏆 O奖检查清单 (O-Prize Checklist)
 
 - [ ] **模型选择有理有据**: 使用决策树证明为什么选这个模型。
 - [ ] **不确定性量化**: 必须有 Monte Carlo 或置信区间。
+  - ⭐ **反问题场景**: 使用 `bayesian-inversion` 报告 95% 置信区间
+  - ⭐ **论文关键句**: "We quantify parameter uncertainty using Bayesian inference"
 - [ ] **灵敏度分析**: 必须有 Sensitivity Analysis (Sobol/Robustness)。
 - [ ] **图表质量**: 必须是出版级 (visual-engineer)。
 - [ ] **代码规范**: 清晰、模块化。
+- [ ] **参数估计**: 如涉及反问题，必须报告后验分布和收敛诊断（R-hat, 接受率）。
 
 ---
-
-*(本文档由 Sisyphus 自动生成，融合了 QUICK_REFERENCE, MODELS_LIST, OPTIMIZATION_INTEGRATION)*
