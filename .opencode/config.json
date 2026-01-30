@@ -7,7 +7,7 @@
       "provider": "google"
     },
     "prometheus": {
-      "model": "o1",
+      "model": "gpt-4o",
       "description": "The Planner - Reasoning & Strategy",
       "temperature": 1.0,
       "provider": "openai"
@@ -29,7 +29,7 @@
     },
     "openai": {
       "options": {
-        "baseURL": "https://api.jiekou.ai/openai/v1",
+        "baseURL": "https://api.jiekou.ai/openai",
         "apiKey": "sk_MWhPzZXMBVJeKcnAO9hL-cxQDmM7t2aMknf8tC_6tbQ"
       }
     }
