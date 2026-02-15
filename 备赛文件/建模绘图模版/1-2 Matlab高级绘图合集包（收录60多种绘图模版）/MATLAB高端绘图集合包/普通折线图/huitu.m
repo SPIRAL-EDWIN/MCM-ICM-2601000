@@ -1,0 +1,29 @@
+%% 数据设置
+X= 20:20:120;
+y1 = [0.98 0.96 0.88 0.81 0.73 0.69];
+y2 = [0.98 0.92 0.8 0.7 0.65 0.61];
+y3 = [0.98 0.87 0.75 0.63 0.52 0.43];
+%% 开始画图
+
+figure('color',[1 1 1]);
+plot(X,y1,'r-o','Linewidth',1.5);
+hold on;
+plot(X,y2,'b-*','Linewidth',1.5);
+hold on;
+plot(X,y3,'g-^','Linewidth',1.5);
+hold on;
+xlabel('个数');
+ylabel('百分比');
+%窗体背景设置
+set(gca, 'Box', 'off', ...                                         
+         'XGrid', 'off', 'YGrid', 'on', ...                       
+         'TickDir', 'out', 'TickLength', [.005 .005], ...           
+         'XMinorTick', 'off', 'YMinorTick', 'off', ...             
+         'XColor', [0 0 0],  'YColor', [0 0 0 ],...           
+         'YTick', 0:0.2:1,...                                      
+         'Ylim' , [0 1], ...                                   
+         'Xlim' , [20 120], ...
+         'Xtick', [20:20:120]);
+grid on;
+legend('k=10','k=20','k=30');
+set(gca,'Linewidth',1.1);

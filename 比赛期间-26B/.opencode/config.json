@@ -1,0 +1,37 @@
+{
+  "profiles": {
+    "sisyphus": {
+      "model": "antigravity-gemini-3-pro",
+      "description": "The Executor - Coding & Implementation",
+      "temperature": 0.1,
+      "provider": "google"
+    },
+    "prometheus": {
+      "model": "gpt-4o",
+      "description": "The Planner - Reasoning & Strategy",
+      "temperature": 1.0,
+      "provider": "openai"
+    },
+    "atlas": {
+      "model": "antigravity-gemini-3-pro",
+      "description": "The Context Manager - Documentation & Search",
+      "temperature": 0.2,
+      "provider": "google"
+    }
+  },
+  "default_profile": "sisyphus",
+  "provider": {
+    "anthropic": {
+      "options": {
+        "baseURL": "https://api.jiekou.ai/anthropic",
+        "apiKey": "sk_MWhPzZXMBVJeKcnAO9hL-cxQDmM7t2aMknf8tC_6tbQ"
+      }
+    },
+    "openai": {
+      "options": {
+        "baseURL": "https://api.jiekou.ai/openai",
+        "apiKey": "sk_MWhPzZXMBVJeKcnAO9hL-cxQDmM7t2aMknf8tC_6tbQ"
+      }
+    }
+  }
+}
