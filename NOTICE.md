@@ -22,4 +22,8 @@ Those files remain subject to their original copyright, license, and usage terms
 
 ## Recommended downstream use
 
-Downstream systems such as TomeVault should prefer the clean skills-only export, rather than treating this full mixed-material repository as entirely open-source.
+Downstream users should prefer the clean skills-only export for reusable skill definitions, scripts, examples, and documentation:
+
+[SPIRAL-EDWIN/Skills-for-Math-Modeling-MCM-ICM](https://github.com/SPIRAL-EDWIN/Skills-for-Math-Modeling-MCM-ICM)
+
+This full mixed-material archive should not be treated as entirely open-source.
